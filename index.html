@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fishfoto</title>
+
+  <!-- Styles from frontend folder -->
+  <link rel="stylesheet" href="frontend/style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>Fishfoto</h1>
+    <p class="subtitle">
+      Upload an image to run the fish detection & classification pipeline
+    </p>
+
+    <input
+      type="file"
+      id="fileInput"
+      accept="image/*"
+      onchange="showPreview()"
+    />
+
+    <!-- Image preview -->
+    <div id="previewContainer" class="preview hidden">
+      <img id="previewImage" alt="Preview" />
+    </div>
+
+    <button id="runBtn" onclick="upload()">Run pipeline</button>
+
+    <!-- Result -->
+    <div id="resultBox" class="hidden">
+      <span id="badge"></span>
+      <pre id="result"></pre>
+    </div>
+
+    <!-- Error -->
+    <p id="error" class="error hidden"></p>
+  </div>
+
+  <!-- Script from frontend folder -->
+  <script src="frontend/app.js"></script>
+</body>
+</html>
