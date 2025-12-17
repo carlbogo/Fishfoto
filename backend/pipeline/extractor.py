@@ -66,7 +66,7 @@ def extract_objects_from_image(
         extraction_model,
         sam_predictor,
         min_area: int = 10_000,
-) -> List[Dict]:
+) -> tuple[np.ndarray, List[Dict]]:
     """
     Runs YOLO + SAM on a single RGB image and returns extracted objects.
 
@@ -82,7 +82,7 @@ def extract_objects_from_image(
     results: List[Dict] = []
 
     processed_rgb = rotate_if_vertical(image_rgb)
-    h, w = processed_rgb.shape[:2]
+    orig_h, orig_w = processed_rgb.shape[:2]
 
     # YOLO detection
     preds = yolo_predict_rotated(extraction_model, processed_rgb)
@@ -90,19 +90,27 @@ def extract_objects_from_image(
     if preds.boxes is None or len(preds.boxes) == 0:
         return []
 
+    # Scaling YOLO → rotated/original
+    yolo_h, yolo_w = preds.boxes.orig_shape
+    scale_x = orig_w / yolo_w
+    scale_y = orig_h / yolo_h
+
     # SAM segmentation
     sam_predictor.set_image(processed_rgb)
 
     for (x1, y1, x2, y2) in preds.boxes.xyxy.cpu().numpy():
 
-        # Convert YOLO boxes directly to ints
-        x1_o, y1_o, x2_o, y2_o = map(int, (x1, y1, x2, y2))
+        # Scale YOLO coords → original rotated image coords
+        x1_o = int(x1 * scale_x)
+        y1_o = int(y1 * scale_y)
+        x2_o = int(x2 * scale_x)
+        y2_o = int(y2 * scale_y)
 
         # Clip to image bounds
-        x1_o = max(0, min(w - 1, x1_o))
-        y1_o = max(0, min(h - 1, y1_o))
-        x2_o = max(0, min(w - 1, x2_o))
-        y2_o = max(0, min(h - 1, y2_o))
+        x1_o = max(0, min(orig_w - 1, x1_o))
+        y1_o = max(0, min(orig_h - 1, y1_o))
+        x2_o = max(0, min(orig_w - 1, x2_o))
+        y2_o = max(0, min(orig_h - 1, y2_o))
 
         cx_o = (x1_o + x2_o) // 2
         cy_o = (y1_o + y2_o) // 2
@@ -130,4 +138,4 @@ def extract_objects_from_image(
             }
         )
 
-    return results
+    return processed_rgb, results

@@ -65,7 +65,7 @@ def process_image(
     - visualize detected fish
     """
 
-    extracted = extract_objects_from_image(
+    processed_rgb, extracted = extract_objects_from_image(
         image_rgb=image_rgb,
         extraction_model=extraction_model,
         sam_predictor=sam_predictor,
@@ -103,7 +103,7 @@ def process_image(
 
     # Draw contours on original image
     vis_image = draw_fish_masks(
-        image_rgb=image_rgb,
+        image_rgb=processed_rgb,
         masks=masks,
     )
 
