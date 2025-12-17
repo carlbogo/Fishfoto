@@ -76,7 +76,7 @@ def process_image(
     num_kilu = 0
     num_raim = 0
 
-    masks = []
+    masks_with_labels = []
 
     for fish in extracted:
         crop = fish["crop"]
@@ -94,17 +94,18 @@ def process_image(
         label, _confidence = pred
 
         total_fish += 1
-        masks.append(mask)
 
         if label == "kilu":
             num_kilu += 1
         elif label == "raim":
             num_raim += 1
 
+        masks_with_labels.append((mask, label))
+
     # Draw contours on original image
     vis_image = draw_fish_masks(
         image_rgb=processed_rgb,
-        masks=masks,
+        masks_with_labels=masks_with_labels,
     )
 
     vis_base64 = image_rgb_to_base64(vis_image)
