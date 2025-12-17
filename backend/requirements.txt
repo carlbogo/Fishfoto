@@ -1,0 +1,15 @@
+# Core numerical & image handling
+numpy==1.26.4
+opencv-python==4.11.0.86
+pillow
+
+# Deep learning
+torch
+ultralytics
+
+# Segment Anything (not on PyPI)
+git+https://github.com/facebookresearch/segment-anything.git
+
+# API server
+fastapi
+uvicorn
