@@ -1,4 +1,4 @@
-# Core numerical & image handling
+# Core numerical & image processing
 numpy==1.26.4
 opencv-python==4.11.0.86
 pillow
@@ -7,9 +7,10 @@ pillow
 torch
 ultralytics
 
-# Segment Anything (not on PyPI)
+# Segment Anything (SAM)
 git+https://github.com/facebookresearch/segment-anything.git
 
 # API server
 fastapi
 uvicorn
+python-multipart

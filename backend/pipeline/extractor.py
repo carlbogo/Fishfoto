@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Tuple
 import numpy as np
 import cv2
 
@@ -14,7 +14,7 @@ def rotate_if_vertical(img_rgb: np.ndarray) -> np.ndarray:
 
 
 # -------------------------------------------------
-# Helper: YOLO prediction, no temp file needed
+# Helper: YOLO prediction
 # -------------------------------------------------
 def yolo_predict_rotated(extraction_model, image_rgb: np.ndarray):
     image_bgr = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
@@ -37,8 +37,8 @@ def masked_crop_from_array(
         mask: np.ndarray,
 ) -> np.ndarray | None:
     """
-        Applies a binary mask to an image and returns the cropped result
-        with a white background. Returns None if mask is empty.
+    Applies a binary mask to an image and returns the cropped result
+    with a white background. Returns None if mask is empty.
     """
 
     ys, xs = np.where(mask)
@@ -66,28 +66,20 @@ def extract_objects_from_image(
         extraction_model,
         sam_predictor,
         min_area: int = 10_000,
-) -> List[np.ndarray]:
+) -> List[Dict]:
     """
-    Runs YOLO + SAM on a single RGB image and returns extracted object crops.
-
-    Parameters
-    ----------
-    image_rgb : np.ndarray
-        Input image in RGB format (H, W, 3)
-    extraction_model : YOLO
-        YOLO detection model
-    sam_predictor : SamPredictor
-        Initialized SAM predictor
-    min_area : int
-        Minimum mask area threshold
+    Runs YOLO + SAM on a single RGB image and returns extracted objects.
 
     Returns
     -------
-    List[np.ndarray]
-        List of extracted RGB images
+    List[dict]
+        Each dict contains:
+        - mask: np.ndarray
+        - crop: np.ndarray
+        - bbox: (x1, y1, x2, y2)
     """
 
-    extracted_images: List[np.ndarray] = []
+    results: List[Dict] = []
 
     processed_rgb = rotate_if_vertical(image_rgb)
     h, w = processed_rgb.shape[:2]
@@ -106,7 +98,7 @@ def extract_objects_from_image(
         # Convert YOLO boxes directly to ints
         x1_o, y1_o, x2_o, y2_o = map(int, (x1, y1, x2, y2))
 
-        # Clip to image bounds (still important)
+        # Clip to image bounds
         x1_o = max(0, min(w - 1, x1_o))
         y1_o = max(0, min(h - 1, y1_o))
         x2_o = max(0, min(w - 1, x2_o))
@@ -127,7 +119,15 @@ def extract_objects_from_image(
             continue
 
         crop = masked_crop_from_array(processed_rgb, mask)
-        if crop is not None:
-            extracted_images.append(crop)
+        if crop is None:
+            continue
 
-    return extracted_images
+        results.append(
+            {
+                "mask": mask,
+                "crop": crop,
+                "bbox": (x1_o, y1_o, x2_o, y2_o),
+            }
+        )
+
+    return results
