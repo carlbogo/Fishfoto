@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 import numpy as np
 import cv2
 
-from app.pipeline_runner import process_image
+from backend.app.pipeline_runner import process_image
 
 app = FastAPI(title="Fishfoto API")
 
