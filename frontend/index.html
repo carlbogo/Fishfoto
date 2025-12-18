@@ -29,10 +29,25 @@
 
     <button id="runBtn" onclick="upload()">Run pipeline</button>
 
-    <!-- Result -->
+    <!-- Results -->
     <div id="resultBox" class="hidden">
-      <span id="badge"></span>
-      <pre id="result"></pre>
+
+      <h3>Results</h3>
+
+      <p class="stats">
+        Total fish: <strong id="totalCount"></strong><br />
+        <span class="kilu">Kilu:</span> <strong id="kiluCount"></strong><br />
+        <span class="raim">Raim:</span> <strong id="raimCount"></strong>
+      </p>
+
+      <img id="resultImage" class="result-image" />
+
+      <!-- Legend -->
+      <p class="legend">
+        <span class="kilu">■ Kilu</span>
+        <span class="raim">■ Raim</span>
+      </p>
+
     </div>
 
     <!-- Error -->

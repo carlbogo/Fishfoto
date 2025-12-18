@@ -1,16 +1,24 @@
-const BACKEND_URL = "https://YOUR_BACKEND_URL/run";
+const BACKEND_URL = "http://localhost:8000/process"; // DEV
 
 function showPreview() {
   const fileInput = document.getElementById("fileInput");
   const preview = document.getElementById("previewImage");
   const container = document.getElementById("previewContainer");
+  const resultBox = document.getElementById("resultBox");
+  const errorEl = document.getElementById("error");
 
   const file = fileInput.files[0];
   if (!file) return;
 
+  // Update preview
   preview.src = URL.createObjectURL(file);
   container.classList.remove("hidden");
+
+  // 🔹 CLEAR OLD RESULTS
+  resultBox.classList.add("hidden");
+  errorEl.classList.add("hidden");
 }
+
 
 async function upload() {
   const fileInput = document.getElementById("fileInput");
@@ -19,8 +27,11 @@ async function upload() {
   const errorEl = document.getElementById("error");
   const btn = document.getElementById("runBtn");
   const resultBox = document.getElementById("resultBox");
-  const resultPre = document.getElementById("result");
-  const badge = document.getElementById("badge");
+
+  const totalEl = document.getElementById("totalCount");
+  const kiluEl = document.getElementById("kiluCount");
+  const raimEl = document.getElementById("raimCount");
+  const resultImg = document.getElementById("resultImage");
 
   errorEl.classList.add("hidden");
   resultBox.classList.add("hidden");
@@ -40,23 +51,28 @@ async function upload() {
   try {
     const res = await fetch(BACKEND_URL, {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
     if (!res.ok) {
-      throw new Error("Backend error");
+      throw new Error(`Backend error: ${res.status}`);
     }
 
     const data = await res.json();
 
-    // Badge
-    badge.textContent = `${data.predicted_class} (${Math.round(data.confidence * 100)}%)`;
-    badge.className = "badge " + data.predicted_class;
+    // ✅ Correct response keys
+    totalEl.textContent = data.total_fish;
+    kiluEl.textContent = data.num_kilu;
+    raimEl.textContent = data.num_raim;
 
-    resultPre.textContent = JSON.stringify(data, null, 2);
+    if (data.image_base64) {
+      resultImg.src = "data:image/png;base64," + data.image_base64;
+    }
+
     resultBox.classList.remove("hidden");
 
   } catch (err) {
+    console.error("Pipeline error:", err);
     errorEl.textContent = "Failed to run pipeline.";
     errorEl.classList.remove("hidden");
   } finally {

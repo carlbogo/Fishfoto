@@ -73,6 +73,11 @@ button:active {
   transform: scale(0.98);
 }
 
+button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
 /* Result box */
 pre {
   margin-top: 24px;
@@ -134,6 +139,36 @@ pre {
 .badge.raim {
   background: #2563eb;
 }
+
+.legend {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.legend .kilu {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.legend .raim {
+  color: #EB3434;
+  margin-left: 12px;
+  font-weight: 600;
+}
+
+.stats {
+  margin: 14px 0;
+  font-size: 0.95rem;
+}
+
+.result-image {
+  margin-top: 14px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
 
 /* Error */
 .error {
