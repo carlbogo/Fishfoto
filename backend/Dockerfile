@@ -38,8 +38,7 @@ RUN pip install --upgrade pip \
 # -----------------------------
 # Copy backend source code + models
 # -----------------------------
-COPY backend ./backend
-COPY models ./models
+COPY backend backend
 
 # -----------------------------
 # Expose FastAPI port

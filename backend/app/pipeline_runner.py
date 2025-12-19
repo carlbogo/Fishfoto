@@ -18,9 +18,9 @@ from backend.utils import ensure_sam_weights
 # -------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-YOLO_EXTRACTOR_WEIGHTS = PROJECT_ROOT / "models/extractor/Yolo/best.pt"
-YOLO_CLASSIFIER_WEIGHTS = PROJECT_ROOT / "models/classifier/Yolo/best.pt"
-SAM_WEIGHTS = PROJECT_ROOT / "models/extractor/SAM/sam_vit_h_4b8939.pth"
+YOLO_EXTRACTOR_WEIGHTS = PROJECT_ROOT / "backend/models/extractor/Yolo/best.pt"
+YOLO_CLASSIFIER_WEIGHTS = PROJECT_ROOT / "backend/models/classifier/Yolo/best.pt"
+SAM_WEIGHTS = PROJECT_ROOT / "backend/models/extractor/SAM/sam_vit_h_4b8939.pth"
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 

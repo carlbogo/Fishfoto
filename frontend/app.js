@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://backend:8000/process";
+const BACKEND_URL = "/api/process";   // NGINX server
 
 function showPreview() {
   const fileInput = document.getElementById("fileInput");
