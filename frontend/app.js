@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://localhost:8000/process"; // DEV
+const BACKEND_URL = "http://backend:8000/process";
 
 function showPreview() {
   const fileInput = document.getElementById("fileInput");

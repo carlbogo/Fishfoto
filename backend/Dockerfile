@@ -29,8 +29,6 @@ WORKDIR /app
 # Install Python dependencies
 # -----------------------------
 COPY backend/requirements.txt .
-COPY models ./models
-
 
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
@@ -38,9 +36,10 @@ RUN pip install --upgrade pip \
 
 
 # -----------------------------
-# Copy backend source code
+# Copy backend source code + models
 # -----------------------------
 COPY backend ./backend
+COPY models ./models
 
 # -----------------------------
 # Expose FastAPI port

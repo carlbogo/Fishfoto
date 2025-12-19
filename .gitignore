@@ -7,8 +7,8 @@
 /dataSources/
 /dataSources.local.xml
 
-# Ignore model weights
-/models/
+# Ignore SAM model weights
+/models/extractor/SAM/
 
 # IDE files
 /.idea/
